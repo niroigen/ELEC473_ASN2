@@ -1,0 +1,1 @@
+extract_data('robotdata1.log');
