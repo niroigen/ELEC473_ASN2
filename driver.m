@@ -8,12 +8,21 @@ DELTA_T = 0.01;
 
 % Changes depending on the log file
 
+Zmax = 8183;
+
+
+a_short = 0.15;
+a_hit = 0.1;
+a_max = 0.01;
+a_rand = 0.74;
+
+sigma = 20;
+lambda = 0.003;
+
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
 current_state = [398, 394, 0];
-
-angles = [-89.5:1:89.5];
 
 for t = 0:DELTA_T:end_time
     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
@@ -29,12 +38,9 @@ for t = 0:DELTA_T:end_time
 
             current_state = motionModel(u, current_state);
 
-            for i = 1:180
-                z_exp = calculateZEXP(current_state, 'OccupancyMapNew.dat', angles(i) * pi / 180);
-            end
+            current_state(4) = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand, laser, 'OccupancyMapNew.dat', curr_laser_data_idx, sigma, lambda);
 
             curr_laser_data_idx += 1;
-            % disp(current_state)
         else
             curr_odometry_data = [odometry(curr_odometry_data_idx, 1), odometry(curr_odometry_data_idx, 2), odometry(curr_odometry_data_idx, 3)];
         end

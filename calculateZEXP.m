@@ -34,5 +34,5 @@ function zexp = calculateZEXP(state, map, laser_theta)
         end
     end
 
-    zexp = sqrt(x_dist^2 + y_dist^2)
+    zexp = sqrt(x_dist^2 + y_dist^2);
 end
