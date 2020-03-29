@@ -11,7 +11,9 @@ DELTA_T = 0.01;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-current_state = [350, 425, 0];
+current_state = [398, 394, 0];
+
+angles = [-89.5:1:89.5];
 
 for t = 0:DELTA_T:end_time
     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
@@ -27,16 +29,14 @@ for t = 0:DELTA_T:end_time
 
             current_state = motionModel(u, current_state);
 
-            for i = 8:187
-                z_exp = calculateZEXP(current_state, 'OccupancyMapNew.dat', laser(curr_laser_data_idx, i) * pi / 180);
-                disp(z_exp)
+            for i = 1:180
+                z_exp = calculateZEXP(current_state, 'OccupancyMapNew.dat', angles(i) * pi / 180);
             end
 
             curr_laser_data_idx += 1;
             % disp(current_state)
         else
             curr_odometry_data = [odometry(curr_odometry_data_idx, 1), odometry(curr_odometry_data_idx, 2), odometry(curr_odometry_data_idx, 3)];
-            current_state = curr_odometry_data;
         end
 
         %% PERFORM SENSOR MODEL UPDATE

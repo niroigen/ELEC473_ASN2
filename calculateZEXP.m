@@ -1,10 +1,5 @@
-function weight = calculateZEXP(state, map, laser_theta)
+function zexp = calculateZEXP(state, map, laser_theta)
     map_plt = dlmread(map);
-    imshow(map_plt)
-    hold on
-    axis on
-
-    plot(state(1), state(2), '.', 'MarkerSize',20)
 
     x_dist = 0;
     y_dist = 0;
@@ -34,15 +29,10 @@ function weight = calculateZEXP(state, map, laser_theta)
         if map_plt(round(state(2) + x_dist), round(state(1) + y_dist))
             hit = true;
         else
-            plot(state(1) + y_dist, state(2) + x_dist, 'r.', 'MarkerSize',10)
             x_dist += increment_x;
-            disp(x_dist)
             y_dist += increment_y;
-            disp(y_dist)
         end
     end
 
-    disp(sqrt(x_dist^2 + y_dist^2))
-
-    weight = 10;
+    zexp = sqrt(x_dist^2 + y_dist^2)
 end
