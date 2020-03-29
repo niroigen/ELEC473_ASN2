@@ -61,11 +61,8 @@ for t = 0:DELTA_T:end_time
             u = [delta_rot1, delta_rot2, delta_translation];
 
             current_state = motionModel(u, current_state);
-
-            % disp(current_state)
         else
             curr_odometry_data = [odometry(curr_odometry_data_idx, 1), odometry(curr_odometry_data_idx, 2), odometry(curr_odometry_data_idx, 3)];
-            current_state = curr_odometry_data;
         end
 
         curr_odometry_data_idx += 1;
