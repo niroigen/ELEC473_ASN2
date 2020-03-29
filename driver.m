@@ -9,6 +9,8 @@ DELTA_T = 0.01;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
+current_state = [350, 425, 0];
+
 for t = 0:DELTA_T:end_time
     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
         %% PERFORM SENSOR MODEL UPDATE
@@ -27,11 +29,8 @@ for t = 0:DELTA_T:end_time
             u = [delta_rot1, delta_rot2, delta_translation];
 
             current_state = motionModel(u, current_state);
-
-            % disp(current_state)
         else
             curr_odometry_data = [odometry(curr_odometry_data_idx, 1), odometry(curr_odometry_data_idx, 2), odometry(curr_odometry_data_idx, 3)];
-            current_state = curr_odometry_data;
         end
 
         curr_odometry_data_idx += 1;
