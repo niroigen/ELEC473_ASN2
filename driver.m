@@ -22,14 +22,25 @@ lambda = 0.003;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-NUM_PARTICLES = 100
+NUM_PARTICLES = 500;
+
+map=dlmread("OccupancyMapNew.dat");
 
 particles = zeros(NUM_PARTICLES, 4);
 
-particles(:,1) = 350 + (500-350)*rand(NUM_PARTICLES,1);
-particles(:,2) = 350 + (425-350)*rand(NUM_PARTICLES,1);
+for i = 1:NUM_PARTICLES
+    valid = false;
 
-map=dlmread("OccupancyMapNew.dat");
+    while ~valid
+        x = round(350 + (500-350)*rand());
+        y = round(350 + (425-350)*rand());
+
+        valid = map(y,x) < 0.25;
+    end 
+    particles(i,1) = x;
+    particles(i,2) = y;
+end
+
 imshow(map)
 
 hold on
@@ -48,7 +59,6 @@ for t = 0:DELTA_T:end_time
             u = [delta_rot1, delta_rot2, delta_translation];
 
             for i = 1:NUM_PARTICLES
-                disp("particle for laser data");
                 particles(i,[1,2,3]) = motionModel(u, particles(i,[1,2,3]));
                 particles(i,4) = sensorModel(particles(i,:), Zmax, a_short, a_hit, a_max, a_rand, laser, map, curr_laser_data_idx, sigma, lambda);
             end
@@ -59,7 +69,17 @@ for t = 0:DELTA_T:end_time
         end
 
         %% PERFORM SENSOR MODEL UPDATE
-        curr_laser_data_idx = curr_laser_data_idx+ 1;
+        curr_laser_data_idx = curr_laser_data_idx + 1;
+
+        particles = updateBelief(particles);
+
+        if exist('plots', 'var') == 1
+            delete(plots);
+        end
+    
+        plots = plot(particles(:,1),particles(:,2),'rs');
+        
+        drawnow ()
     end
 
     if curr_odometry_data_idx <= size(odometry,1) && odometry(curr_odometry_data_idx,ODOMETRY_TIME_IDX) >= t - DELTA_T && odometry(curr_odometry_data_idx,ODOMETRY_TIME_IDX) <= t
@@ -81,22 +101,13 @@ for t = 0:DELTA_T:end_time
         end
 
         curr_odometry_data_idx = curr_odometry_data_idx+ 1;
-    end
 
-    if exist('plots', 'var') == 1
-        for particle = 1:size(plots, 2)
-            delete(plots(particle));
+        if exist('plots', 'var') == 1
+            delete(plots);
         end
+    
+        plots = plot(particles(:,1),particles(:,2),'rs');
+        
+        drawnow ()
     end
-
-    for particle = 1:size(particles, 1)
-        x=particles(particle,1);
-        y=particles(particle,2);
-
-        plots(particle) = plot(x,y,'rs');
-    end
-
-    disp("PRESS ENTER PLEASE")
-    pause;
-    %% UPDATE BELIEF
 end
