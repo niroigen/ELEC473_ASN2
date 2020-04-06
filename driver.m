@@ -22,14 +22,18 @@ lambda = 0.003;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-NUM_PARTICLES = 1000
+NUM_PARTICLES = 10
 
 particles = zeros(NUM_PARTICLES, 4);
 
-particles(:,1) = 350 + (500-350)*rand(NUM_PARTICLES,1)
-particles(:,2) = 350 + (425-350)*rand(NUM_PARTICLES,1)
+particles(:,1) = 350 + (500-350)*rand(NUM_PARTICLES,1);
+particles(:,2) = 350 + (425-350)*rand(NUM_PARTICLES,1);
 
+map=dlmread("OccupancyMapNew.dat");
+imshow(map)
 
+hold on
+axis on
 
 for t = 0:DELTA_T:end_time
     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
@@ -78,5 +82,20 @@ for t = 0:DELTA_T:end_time
         curr_odometry_data_idx += 1;
     end
 
+    if exist('plots', 'var') == 1
+        for particle = 1:size(plots, 2);
+            delete(plots(particle));
+        end
+    end
+
+    for particle = 1:size(particles, 1)
+        x=particles(particle,1);
+        y=particles(particle,2);
+
+        plots(particle) = plot(x,y,'rs');
+    end
+
+    disp("PRESS ENTER PLEASE")
+    pause;
     %% UPDATE BELIEF
 end
