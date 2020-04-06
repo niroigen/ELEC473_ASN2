@@ -29,8 +29,8 @@ function zexp = calculateZEXP(state, map, laser_theta)
         if map_plt(round(state(2) + x_dist), round(state(1) + y_dist))
             hit = true;
         else
-            x_dist += increment_x;
-            y_dist += increment_y;
+            x_dist =x_dist+ increment_x;
+            y_dist = y_dist+ increment_y;
         end
     end
 
