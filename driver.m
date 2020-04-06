@@ -22,7 +22,7 @@ lambda = 0.003;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-NUM_PARTICLES = 10
+NUM_PARTICLES = 100
 
 particles = zeros(NUM_PARTICLES, 4);
 
@@ -48,11 +48,12 @@ for t = 0:DELTA_T:end_time
             u = [delta_rot1, delta_rot2, delta_translation];
 
             for i = 1:NUM_PARTICLES
+                disp("particle for laser data");
                 particles(i,[1,2,3]) = motionModel(u, particles(i,[1,2,3]));
-                particles(i,4) = sensorModel(particles(i,:), Zmax, a_short, a_hit, a_max, a_rand, laser, 'OccupancyMapNew.dat', curr_laser_data_idx, sigma, lambda);
+                particles(i,4) = sensorModel(particles(i,:), Zmax, a_short, a_hit, a_max, a_rand, laser, map, curr_laser_data_idx, sigma, lambda);
             end
 
-            curr_laser_data_idx= curr_laser_data_idx+ 1;
+            curr_laser_data_idx= curr_laser_data_idx + 1;
         else
             curr_odometry_data = [odometry(curr_odometry_data_idx, 1), odometry(curr_odometry_data_idx, 2), odometry(curr_odometry_data_idx, 3)];
         end
@@ -83,7 +84,7 @@ for t = 0:DELTA_T:end_time
     end
 
     if exist('plots', 'var') == 1
-        for particle = 1:size(plots, 2);
+        for particle = 1:size(plots, 2)
             delete(plots(particle));
         end
     end
