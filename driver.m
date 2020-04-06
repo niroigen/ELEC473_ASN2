@@ -22,7 +22,14 @@ lambda = 0.003;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-current_state = [398, 394, 0];
+NUM_PARTICLES = 1000
+
+particles = zeros(NUM_PARTICLES, 4);
+
+particles(:,1) = 350 + (500-350)*rand(NUM_PARTICLES,1)
+particles(:,2) = 350 + (425-350)*rand(NUM_PARTICLES,1)
+
+
 
 for t = 0:DELTA_T:end_time
     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
@@ -36,9 +43,10 @@ for t = 0:DELTA_T:end_time
 
             u = [delta_rot1, delta_rot2, delta_translation];
 
-            current_state = motionModel(u, current_state);
-
-            current_state(4) = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand, laser, "Assignment#2/OccupancyMapNew.dat", curr_laser_data_idx, sigma, lambda);
+            for i = 1:NUM_PARTICLES
+                particles(i,[1,2,3]) = motionModel(u, particles(i,[1,2,3]));
+                particles(i,4) = sensorModel(particles(i,:), Zmax, a_short, a_hit, a_max, a_rand, laser, 'OccupancyMapNew.dat', curr_laser_data_idx, sigma, lambda);
+            end
 
             curr_laser_data_idx= curr_laser_data_idx+ 1;
         else
@@ -60,7 +68,9 @@ for t = 0:DELTA_T:end_time
 
             u = [delta_rot1, delta_rot2, delta_translation];
 
-            current_state = motionModel(u, current_state);
+            for i = 1:NUM_PARTICLES
+                particles(i,[1,2,3]) = motionModel(u, particles(i,[1,2,3]));
+            end
         else
             curr_odometry_data = [odometry(curr_odometry_data_idx, 1), odometry(curr_odometry_data_idx, 2), odometry(curr_odometry_data_idx, 3)];
         end
