@@ -1,6 +1,6 @@
-function newParticles = updateBelief(particles)
-    numParticles = size(particles,1);
-    totalWeight = sum(particles,1)(4);
+function newParticles = updateBelief(particles,NUM_PARTICLES)
+    numParticles =NUM_PARTICLES;
+    totalWeight = sum(particles(:,4));
     newParticles = particles;
 
     if totalWeight ~= 0
