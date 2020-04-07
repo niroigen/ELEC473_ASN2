@@ -1,4 +1,4 @@
-?function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand, laser, occupancy_map, curr_laser_data_idx, sigma, lambda)
+function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand, laser, occupancy_map, curr_laser_data_idx, sigma, lambda)
     angles = [-89.5:1:89.5];
 
     weight = 1;
