@@ -2,6 +2,7 @@ clear;
 clc;
 LASER_TIME_IDX = 187;
 ODOMETRY_TIME_IDX = 4;
+% delta_t=end_time/number of odometry data points
 DELTA_T = 0.06;
 
 [laser, odometry, end_time] = extract_data('robotdata1.log');
