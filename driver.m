@@ -22,7 +22,7 @@ lambda = 0.003;
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-NUM_PARTICLES = 500;
+NUM_PARTICLES = 100;
 
 map=dlmread("OccupancyMapNew.dat");
 
@@ -35,7 +35,7 @@ for i = 1:NUM_PARTICLES
         x = round(350 + (500-350)*rand());
         y = round(350 + (425-350)*rand());
 
-        valid = map(y,x) < 0.25;
+        valid = map(x,y) < 0.35 && map(x,y) > 0;
     end 
     particles(i,1) = x;
     particles(i,2) = y;
@@ -55,6 +55,10 @@ for t = 0:DELTA_T:end_time
             delta_translation = sqrt((curr_odometry_data(1) - previous_odometry_data(1))^2 + (curr_odometry_data(2) - previous_odometry_data(2))^2);
             delta_rot1 = atan2(curr_odometry_data(1) - previous_odometry_data(1), curr_odometry_data(2) - previous_odometry_data(2)) - previous_odometry_data(3);
             delta_rot2 = curr_odometry_data(3) - previous_odometry_data(3) - delta_rot1;
+
+            % disp("THETA")
+            % disp(curr_odometry_data(3));
+            % pause;
 
             u = [delta_rot1, delta_rot2, delta_translation];
 
@@ -77,7 +81,7 @@ for t = 0:DELTA_T:end_time
             delete(plots);
         end
     
-        plots = plot(particles(:,1),particles(:,2),'rs');
+        plots = plot(particles(:,2),particles(:,1),'y*');
         
         drawnow ()
     end
@@ -106,8 +110,8 @@ for t = 0:DELTA_T:end_time
             delete(plots);
         end
     
-        plots = plot(particles(:,1),particles(:,2),'rs');
-        
+        plots = plot(particles(:,2),particles(:,1),'y*');
+
         drawnow ()
     end
 end
