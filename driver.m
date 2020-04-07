@@ -2,31 +2,33 @@ clear;
 clc;
 LASER_TIME_IDX = 187;
 ODOMETRY_TIME_IDX = 4;
-DELTA_T = 0.01;
+% delta_t=end_time/number of odometry data points
+DELTA_T = 0.06;
 
 [laser, odometry, end_time] = extract_data('robotdata1.log');
 
 % Changes depending on the log file
 
-Zmax = 8183;
+Zmax = (8183)/10;
 
 
-a_short = 0.15;
-a_hit = 0.1;
-a_max = 0.01;
-a_rand = 0.74;
+a_short = 0.15/10;
+a_hit = 0.1/10;
+a_max = 0.01/10;
+a_rand = 0.74/10;
 
-sigma = 20;
-lambda = 0.003;
+sigma = 20/10;
+lambda = 0.003/10;
 
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
-NUM_PARTICLES = 500;
+NUM_PARTICLES = 100;
 
 map=dlmread("OccupancyMapNew.dat");
 
 particles = zeros(NUM_PARTICLES, 4);
+
 
 for i = 1:NUM_PARTICLES
     valid = false;
@@ -35,17 +37,20 @@ for i = 1:NUM_PARTICLES
         x = round(350 + (500-350)*rand());
         y = round(350 + (425-350)*rand());
 
-        valid = map(y,x) < 0.25;
+        valid =  (map(x,y) > 0 && map(x,y) < 0.25 );
+        particles(i,1) = x;
+        particles(i,2) = y;
     end 
-    particles(i,1) = x;
-    particles(i,2) = y;
+    
 end
 
 imshow(map)
 
 hold on
 axis on
-
+ %% remove later
+%% end_time=2218;
+%% DELTA_T=1;
 for t = 0:DELTA_T:end_time
     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
         if exist('curr_odometry_data', 'var') == 1
@@ -76,7 +81,7 @@ for t = 0:DELTA_T:end_time
         if exist('plots', 'var') == 1
             delete(plots);
         end
-    
+        
         plots = plot(particles(:,1),particles(:,2),'rs');
         
         drawnow ()

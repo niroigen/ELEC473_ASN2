@@ -25,7 +25,7 @@ function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand
         end
         
         p_max = 0;
-        if(z > Zmax)
+        if z > Zmax
             p_max = 1;
         end
 
