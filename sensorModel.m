@@ -1,13 +1,13 @@
-function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand, laser, occupancy_map, curr_laser_data_idx, sigma, lambda)
+?function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand, laser, occupancy_map, curr_laser_data_idx, sigma, lambda)
     angles = [-89.5:1:89.5];
 
     weight = 1;
-    g=current_state;
-    test = plot(current_state(1),current_state(2),'y');
+
+    test = plot(current_state(1),current_state(2),'ys');
 
     for i = 1:29:180
-        z_exp = calculateZEXP(current_state,occupancy_map, angles(i) * pi / 180, Zmax);
-        z = laser(curr_laser_data_idx, 6+i);
+        z_exp = calculateZEXP(current_state,occupancy_map, angles(i) * pi / 180, Zmax)
+        z = laser(curr_laser_data_idx, 6+i)
 
         % pause;
         norm_z = 1;
@@ -20,12 +20,12 @@ function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand
 
         p_short = 0;
         if z < z_exp
-            norm_short = 1/(1-exp(-1*lambda*z_exp));
+            norm_short = 1/(1-e^(-1*lambda*z_exp));
             p_short = norm_short * lambda * e^(-1*lambda*z);
         end
         
         p_max = 0;
-        if(z > Zmax)
+        if z > Zmax
             p_max = 1;
         end
 
@@ -35,5 +35,6 @@ function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand
 
         weight = weight* p;
     end
-   
+
+    delete(test);
 end
