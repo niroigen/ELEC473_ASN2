@@ -3,6 +3,9 @@ function newParticles = updateBelief(particles)
     totalWeight = sum(particles,1)(4);
     newParticles = particles;
 
+    best = max(particles(:,4));
+    disp(best);
+
     if totalWeight ~= 0
         particles(:,4) = numParticles * (particles(:,4)/totalWeight);
 

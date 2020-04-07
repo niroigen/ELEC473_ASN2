@@ -10,6 +10,10 @@ function zexp = calculateZEXP(state, map_plt, laser_theta, Zmax)
 
     phi = state(3) + laser_theta;
 
+    % disp(x_laser);
+    % disp(y_laser);
+    % pause;
+
     zexp = -1;
 
     if phi >= -pi/4 && phi <= pi/4
@@ -32,20 +36,33 @@ function zexp = calculateZEXP(state, map_plt, laser_theta, Zmax)
         x_loc = x_laser  + x_dist;
         y_loc = y_laser + y_dist;
 
+        if isnan(x_loc) || isnan(y_loc)
+            % disp(x_laser)
+            % disp(y_laser)
+            % disp(y_dist)
+            % disp(x_dist)
+            % disp(phi)
+            % disp(state(3))
+            % disp(laser_theta)
+            % pause;
+        end
+
         if sqrt(x_dist^2 + y_dist^2) >= Zmax || round(x_loc) > 800 || round(x_loc) < 1 || round(y_loc) > 800 || round(y_loc) < 1
             zexp = Zmax;
             break;
         end
 
-        if map_plt(round(x_loc), round(y_loc)) >= 0.25
+        if map_plt(round(x_loc), round(y_loc)) >= 0.35 || map_plt(round(x_loc), round(y_loc)) < 0
             hit = true;
         else
             x_dist = x_dist+ increment_x;
             y_dist = y_dist+ increment_y;
         end
 
-        % plt = plot(round(x_loc), round(y_loc), 'r');
+        % plt = plot(round(y_loc), round(x_loc), 'r', 'MarkerSize', 12);
         % drawnow ()
+        % pause;
+
         % delete(plt);
     end
 
