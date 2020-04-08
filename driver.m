@@ -27,7 +27,7 @@ set(handle,'xdata', particles(:,2)/10,'ydata',particles(:,1)/10);
 disp(end_time)
 
 for t=0:DELTA_T:end_time
-    if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
+    if isnewlaser(curr_laser_data_idx, laser, LASER_TIME_IDX, t, DELTA_T)
         disp("LASER")
         disp(t)
 
@@ -36,7 +36,7 @@ for t=0:DELTA_T:end_time
         curr_laser_data_idx = curr_laser_data_idx + 1;
     end
 
-    if curr_odometry_data_idx <= size(odometry,1) && odometry(curr_odometry_data_idx,ODOMETRY_TIME_IDX) >= t - DELTA_T && odometry(curr_odometry_data_idx,ODOMETRY_TIME_IDX) <= t
+    if isnewodom(curr_odometry_data_idx, odometry, ODOMETRY_TIME_IDX, t, DELTA_T)
         disp("ODOMETRY")
         disp(t)
 
