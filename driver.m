@@ -3,10 +3,10 @@ clc;
 LASER_TIME_IDX = 187;
 ODOMETRY_TIME_IDX = 4;
 DELTA_T = 0.01;
-
-[laser, odometry, end_time] = extract_data('robotdata1.log');
-
 NUM_PARTICLES = 500;
+
+curr_laser_data_idx = 1;
+curr_odometry_data_idx = 1;
 
 map=dlmread("OccupancyMapNew.dat");
 
@@ -20,8 +20,30 @@ axis on
 handle=plot(particles(:,2)/10,particles(:,1)/10,'linestyle','none','marker','o', 'MarkerFaceColor','b');
 set(handle,'xdata', particles(:,2)/10,'ydata',particles(:,1)/10);
 
+
+
+[laser, odometry, end_time] = extract_data('robotdata1.log');
+
+disp(end_time)
+
 for t=0:DELTA_T:end_time
-    disp(t)
+    if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
+        disp("LASER")
+        disp(t)
+
+
+
+        curr_laser_data_idx = curr_laser_data_idx + 1;
+    end
+
+    if curr_odometry_data_idx <= size(odometry,1) && odometry(curr_odometry_data_idx,ODOMETRY_TIME_IDX) >= t - DELTA_T && odometry(curr_odometry_data_idx,ODOMETRY_TIME_IDX) <= t
+        disp("ODOMETRY")
+        disp(t)
+
+
+
+        curr_odometry_data_idx = curr_odometry_data_idx + 1;
+    end
 end
 % for t = 0:DELTA_T:end_time
 %     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
