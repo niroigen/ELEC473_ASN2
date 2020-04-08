@@ -37,8 +37,6 @@ handle=pltparticles(particles);
 [laser, odometry, end_time] = extract_data('robotdata1.log');
 
 for t=0:DELTA_T:end_time
-    disp(t)
-
     if isnewlaser(curr_laser_data_idx, laser, LASER_TIME_IDX, t, DELTA_T)
         if curr_laser_data_idx == 1
             prev_odom = laser(curr_laser_data_idx, [1,2,3]);
@@ -49,14 +47,28 @@ for t=0:DELTA_T:end_time
             particles = motionmodel(u, particles, ALPHA_1, ALPHA_2, ALPHA_3, ALPHA_4);
 
             for i = 1:NUM_PARTICLES
+                if particles(i,3) > pi
+                    while(particles(i,3) > pi)
+                        particles(i,3) = particles(i,3) - 2 * pi;
+                    end
+                elseif particles(i,3) < -pi
+                    while(particles(i,3) < -pi)
+                        particles(i,3) = particles(i,3) + 2 * pi;
+                    end
+                end
                 particles(i,4) = sensorModel(particles(i,:), Zmax, a_short, a_hit, a_max, a_rand, laser, map, curr_laser_data_idx, sigma, lambda);
             end
 
-            particles = updateBelief(particles);
+            delete(handle)
+            handle=pltparticles(particles);
+
+            drawnow();
 
             curr_laser_data_idx= curr_laser_data_idx + 1;
 
             prev_odom = curr_odom;
+
+            particles = updateBelief(particles);
         end
 
         curr_laser_data_idx = curr_laser_data_idx + 1;

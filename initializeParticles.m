@@ -11,6 +11,9 @@ function particles = initializeParticles(num_particles, map)
 
     [row, col] = ind2sub(size(map), valid_indices);
 
+    row = row(row >= 350 & row <= 500);
+    col = col(col >= 350 & col <= 450);
+
     for i = 1:num_particles
         rand_idx = randi(size(row)(1));
         particles(i,1) = row(rand_idx) * 10;
