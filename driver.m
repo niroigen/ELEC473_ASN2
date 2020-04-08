@@ -17,9 +17,8 @@ imshow(map)
 hold on
 axis on
 
-handle=scatter(particles(:,2)/10,particles(:,1)/10,'filled','d');
-
-% set(handle,'xdata', particles(:,2),'ydata',particles(:,1));
+handle=plot(particles(:,2)/10,particles(:,1)/10,'linestyle','none','marker','o', 'MarkerFaceColor','b');
+set(handle,'xdata', particles(:,2)/10,'ydata',particles(:,1)/10);
 
 % for t = 0:DELTA_T:end_time
 %     if curr_laser_data_idx <= size(laser,1) && laser(curr_laser_data_idx,LASER_TIME_IDX) >= t - DELTA_T && laser(curr_laser_data_idx,LASER_TIME_IDX) <= t
