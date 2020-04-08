@@ -8,13 +8,9 @@ function zexp = calculateZEXP(state, map_plt, laser_theta, Zmax)
     x_laser = state(1) + 25 * cos(laser_theta);
     y_laser = state(2) + 25 * sin(laser_theta);
 
-    laser = plot(round(y_laser/10), round(x_laser/10), 'ys');
-
-    pause;
+    % laser = plot(round(y_laser/10), round(x_laser/10), 'ys');
 
     phi = state(3) + laser_theta;
-
-    disp(phi);
 
     zexp = -1;
 
@@ -46,15 +42,10 @@ function zexp = calculateZEXP(state, map_plt, laser_theta, Zmax)
         x_loc = x_laser  + x_dist;
         y_loc = y_laser + y_dist;
 
-        % disp(x_loc);
-        % disp(y_loc);
-
         if sqrt(x_dist^2 + y_dist^2) >= Zmax 
             zexp = Zmax;
-        elseif round(x_loc) > 800 || round(x_loc) < 1 || round(y_loc) > 800 || round(y_loc) < 1
-        %     pause;
+        elseif round(x_loc/10) > 800 || round(x_loc/10) < 1 || round(y_loc/10) > 800 || round(y_loc/10) < 1
             break;
-        %     break;
         end
 
         if map_plt(round(x_loc/10), round(y_loc/10)) >= 0.25 || map_plt(round(x_loc/10), round(y_loc/10)) == -1
@@ -64,14 +55,16 @@ function zexp = calculateZEXP(state, map_plt, laser_theta, Zmax)
             y_dist = y_dist+ increment_y;
         end
 
-        plt = plot(round(y_loc), round(x_loc), 'r', 'LineWidth',12);
-        drawnow ()
-        delete(plt);
+        % plt = plot(round(y_loc/10), round(x_loc/10), 'r', 'LineWidth',12);
+        % drawnow ()
+        % disp("PLOTTED");
+        % pause;
+        % delete(plt);
     end
 
     if zexp == -1
         zexp = sqrt(x_dist^2 + y_dist^2);
     end
 
-    delete(laser);
+    % delete(laser);
 end

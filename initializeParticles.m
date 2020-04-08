@@ -7,12 +7,12 @@ function particles = initializeParticles(num_particles, map)
     particles(:,4) = weight;
 
     % -1 one is considered to not be a valid location
-    valid_indices = find(map+1==1);
+    valid_indices = find(map==0);
 
     [row, col] = ind2sub(size(map), valid_indices);
 
-    row = row(row >= 350 & row <= 500);
-    col = col(col >= 350 & col <= 450);
+    % row = row(row >= 350 & row <= 500);
+    % col = col(col >= 350 & col <= 450);
 
     for i = 1:num_particles
         rand_idx = randi(size(row)(1));

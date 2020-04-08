@@ -3,12 +3,10 @@ function weight = sensorModel(current_state, Zmax, a_short, a_hit, a_max, a_rand
 
     weight = 1;
 
-    for i = 1:10:180
+    for i = 1:30:180
         z_exp = calculateZEXP(current_state,occupancy_map, angles(i) * pi / 180, Zmax);
         z = laser(curr_laser_data_idx, 6+i);
 
-        disp(z_exp);
-        disp(z);
         norm_z = 1;
 
         if ((z_exp - 2*sigma) < 0) || ((z_exp + 2*sigma) > Zmax)
