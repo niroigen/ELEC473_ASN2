@@ -5,6 +5,11 @@ ODOMETRY_TIME_IDX = 4;
 DELTA_T = 0.01;
 NUM_PARTICLES = 500;
 
+ALPHA_1 = 0.0003;
+ALPHA_2 = 0.0001;
+ALPHA_3 = 0.006 ;
+ALPHA_4 = 1	;
+
 curr_laser_data_idx = 1;
 curr_odometry_data_idx = 1;
 
@@ -40,7 +45,16 @@ for t=0:DELTA_T:end_time
         disp("ODOMETRY")
         disp(t)
 
+        if curr_odometry_data_idx == 1
+            prev_odom = odometry(curr_odometry_data_idx, [1,2,3]);
+        else
+            curr_odom = odometry(curr_odometry_data_idx, [1,2,3]);
+            u = getodominfo(curr_odom, prev_odom);
 
+            particles = motionmodel(u, particles, ALPHA_1, ALPHA_2, ALPHA_3, ALPHA_4);
+
+            prev_odom = curr_odom;
+        end
 
         curr_odometry_data_idx = curr_odometry_data_idx + 1;
     end
