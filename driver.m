@@ -3,7 +3,7 @@ clc;
 LASER_TIME_IDX = 187;
 ODOMETRY_TIME_IDX = 4;
 DELTA_T = 0.01;
-NUM_PARTICLES = 500;
+NUM_PARTICLES = 100;
 
 ALPHA_1 = 0.0003;
 ALPHA_2 = 0.0001;
@@ -22,10 +22,7 @@ imshow(map)
 hold on
 axis on
 
-handle=plot(particles(:,2)/10,particles(:,1)/10,'linestyle','none','marker','o', 'MarkerFaceColor','b');
-set(handle,'xdata', particles(:,2)/10,'ydata',particles(:,1)/10);
-
-
+handle=pltparticles(particles);
 
 [laser, odometry, end_time] = extract_data('robotdata1.log');
 
@@ -52,6 +49,11 @@ for t=0:DELTA_T:end_time
             u = getodominfo(curr_odom, prev_odom);
 
             particles = motionmodel(u, particles, ALPHA_1, ALPHA_2, ALPHA_3, ALPHA_4);
+
+            delete(handle)
+            handle=pltparticles(particles);
+
+            drawnow();
 
             prev_odom = curr_odom;
         end
