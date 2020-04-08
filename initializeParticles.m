@@ -4,6 +4,8 @@ function particles = initializeParticles(num_particles, map)
 
     particles = zeros(num_particles, 4);
 
+    particles(:,4) = weight;
+
     % -1 one is considered to not be a valid location
     valid_indices = find(map+1==1);
 
